@@ -1,5 +1,6 @@
 import { useApp } from "../context/AppContext";
 import { toId } from "../utils/graph";
+import TopicLinksPopover from "./TopicLinksPopover";
 
 export default function SidePanel() {
   const { panelOpen, selectedDetail, loading, selectAndExpand, closePanel } =
@@ -58,14 +59,17 @@ export default function SidePanel() {
                   </p>
                   <ul className="space-y-2">
                     {selectedDetail.relatedTopics.map((related) => (
-                      <li key={related}>
+                      <li key={related} className="flex items-stretch">
                         <button
                           type="button"
-                          onClick={() => selectAndExpand(toId(related), related)}
-                          className="w-full border border-zinc-800 px-4 py-3 text-left text-sm text-zinc-300 transition-colors hover:border-amber-200/30 hover:bg-zinc-900 hover:text-amber-100"
+                          onClick={() =>
+                            selectAndExpand(toId(related), related)
+                          }
+                          className="min-w-0 flex-1 border border-zinc-800 px-4 py-3 text-left text-sm text-zinc-300 transition-colors hover:border-amber-200/30 hover:bg-zinc-900 hover:text-amber-100"
                         >
                           {related}
                         </button>
+                        <TopicLinksPopover topic={related} />
                       </li>
                     ))}
                   </ul>
