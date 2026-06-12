@@ -151,6 +151,7 @@ export function AppProvider({ children }) {
       });
       setExploredCount(1);
       setDepth(1);
+      console.log("setting autoMode to running");
       setAutoMode("running");
     }
   }, [expandNode, navigate]);

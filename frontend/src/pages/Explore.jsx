@@ -6,7 +6,8 @@ import SidePanel from "../components/SidePanel";
 import { useApp } from "../context/AppContext";
 
 export default function Explore() {
-  const { graph, loading, error } = useApp();
+  const { graph, loading, error, autoMode, exploredCount, depth, pauseAutoMode, resumeAutoMode, stopAutoMode } = useApp();
+  console.log("autoMode:", autoMode);
 
   return (
     <div className="flex h-screen flex-col bg-zinc-950">
@@ -23,6 +24,18 @@ export default function Explore() {
       </header>
 
       <div className="relative min-h-0 flex-1">
+      {autoMode && (
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-3 border border-amber-900/40 bg-zinc-950/90 px-4 py-2 text-xs uppercase tracking-[0.25em] text-amber-100/80 backdrop-blur-sm">
+            <span>Explored: {exploredCount}</span>
+            <span>Depth: {depth}</span>
+            {autoMode === "running" ? (
+              <button onClick={pauseAutoMode} className="hover:text-amber-300">⏸ Pause</button>
+            ) : (
+              <button onClick={resumeAutoMode} className="hover:text-amber-300">▶ Resume</button>
+            )}
+            <button onClick={stopAutoMode} className="hover:text-red-300">⏹ Stop</button>
+          </div>
+        )}
         {graph.nodes.length === 0 && !loading && (
           <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
             <p className="text-sm uppercase tracking-[0.35em] text-zinc-600">
