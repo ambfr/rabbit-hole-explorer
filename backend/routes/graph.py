@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from groq import APIError
 
-from services.llm_service import expand_topic
+from services.llm_service import expand_topic, get_random_topic
 
 router = APIRouter(tags=["graph"])
 
@@ -16,3 +16,13 @@ async def expand(topic: str = Query(..., min_length=1)):
         raise HTTPException(status_code=502, detail=e.message)
     except Exception:
         raise HTTPException(status_code=500, detail="Failed to expand topic")
+
+
+@router.get("/random-topic")
+async def random_topic():
+    try:
+        topic = await get_random_topic()
+        return {"topic": topic}
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to generate random topic")
+

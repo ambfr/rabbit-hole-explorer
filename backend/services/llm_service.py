@@ -50,3 +50,22 @@ The related_topics list must contain exactly 5 related topic names."""
         raise ValueError("Invalid response format from LLM")
 
     return result
+
+
+
+async def get_random_topic() -> str:
+    client = _get_client()
+
+    prompt = """Give me one single interesting, specific topic (a person, place, event, phenomenon, or concept) that would be fun to explore in a "rabbit hole" of related topics. Pick something unexpected - mix of history, science, nature, mystery, culture, space, mythology, etc. Respond with ONLY the topic name, nothing else, no quotes, no explanation."""
+
+    response = await client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        max_tokens=50,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    raw = response.choices[0].message.content
+    if not raw:
+        raise ValueError("Empty response from LLM")
+
+    return raw.strip().strip('"')
