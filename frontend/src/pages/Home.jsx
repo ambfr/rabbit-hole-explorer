@@ -1,5 +1,4 @@
 import SearchBar from "../components/SearchBar";
-import TopicResults from "../components/TopicResults";
 import { useApp } from "../context/AppContext";
 
 const SUGGESTIONS = [
@@ -11,7 +10,7 @@ const SUGGESTIONS = [
 ];
 
 export default function Home() {
-  const { searchTopic, result } = useApp();
+  const { startExploring } = useApp();
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -36,22 +35,18 @@ export default function Home() {
 
         <SearchBar />
 
-        {!result && (
-          <div className="mt-14 flex flex-wrap justify-center gap-3">
-            {SUGGESTIONS.map((suggestion) => (
-              <button
-                key={suggestion}
-                type="button"
-                onClick={() => searchTopic(suggestion)}
-                className="border border-zinc-800 px-4 py-2 text-sm text-zinc-500 transition-colors hover:border-zinc-600 hover:text-zinc-300"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <TopicResults />
+        <div className="mt-14 flex flex-wrap justify-center gap-3">
+          {SUGGESTIONS.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() => startExploring(suggestion)}
+              className="border border-zinc-800 px-4 py-2 text-sm text-zinc-500 transition-colors hover:border-zinc-600 hover:text-zinc-300"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
       </main>
     </div>
   );
