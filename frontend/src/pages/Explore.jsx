@@ -7,8 +7,7 @@ import { useApp } from "../context/AppContext";
 
 export default function Explore() {
   const { graph, loading, error, autoMode, exploredCount, depth, pauseAutoMode, resumeAutoMode, stopAutoMode } = useApp();
-  console.log("autoMode:", autoMode);
-
+  
   return (
     <div className="flex h-screen flex-col bg-zinc-950">
       <header className="z-20 flex shrink-0 items-center gap-4 border-b border-zinc-800/80 bg-zinc-950/90 px-4 py-4 backdrop-blur-sm sm:px-6">

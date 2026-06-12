@@ -78,6 +78,7 @@ export function AppProvider({ children }) {
     },
     [expandNode, navigate],
   );
+  console.log("selectAndExpand called, autoModeRef:", autoModeRef.current);
 
   const selectAndExpand = useCallback(
     async (nodeId, label) => {
@@ -151,7 +152,6 @@ export function AppProvider({ children }) {
       });
       setExploredCount(1);
       setDepth(1);
-      console.log("setting autoMode to running");
       setAutoMode("running");
     }
   }, [expandNode, navigate]);
@@ -199,24 +199,28 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{
-        topic,
-        graph,
-        selectedNodeId,
-        selectedDetail,
-        panelOpen,
-        loading,
-        error,
-        autoMode,
-        exploredCount,
-        depth,
-        startExploring,
-        startRandomRabbitHole,
-        stopAutoMode,
-        pauseAutoMode,
-        resumeAutoMode,
-      }}
-    >
+    value={{
+      topic,
+      graph,
+      selectedNodeId,
+      selectedDetail,
+      panelOpen,
+      loading,
+      error,
+      autoMode,
+      exploredCount,
+      depth,
+      startExploring,
+      startRandomRabbitHole,
+      stopAutoMode,
+      pauseAutoMode,
+      resumeAutoMode,
+      expandNode,
+      selectAndExpand,
+      closePanel,
+      resetExploration,
+    }}
+  >
       {children}
     </AppContext.Provider>
   );
