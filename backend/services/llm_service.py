@@ -1,6 +1,6 @@
 import json
 import re
-
+import random
 from groq import AsyncGroq
 
 from config import GROQ_API_KEY
@@ -52,15 +52,27 @@ The related_topics list must contain exactly 5 related topic names."""
     return result
 
 
+import random
 
 async def get_random_topic() -> str:
     client = _get_client()
 
-    prompt = """Give me one single interesting, specific topic (a person, place, event, phenomenon, or concept) that would be fun to explore in a "rabbit hole" of related topics. Pick something unexpected - mix of history, science, nature, mystery, culture, space, mythology, etc. Respond with ONLY the topic name, nothing else, no quotes, no explanation."""
+    categories = [
+        "an obscure historical event", "a strange animal or organism",
+        "a scientific phenomenon", "a mythological figure or story",
+        "an unsolved mystery", "a place in the world", "a piece of technology",
+        "an art movement", "a food or culinary tradition", "a space object or phenomenon",
+        "a famous invention", "a cultural tradition or festival", "a historical figure",
+        "a natural disaster", "a language or linguistics topic"
+    ]
+    category = random.choice(categories)
+
+    prompt = f"""Give me one single specific, interesting topic related to {category} - something that would be genuinely surprising or lesser-known. Respond with ONLY the topic name, nothing else, no quotes, no explanation."""
 
     response = await client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         max_tokens=50,
+        temperature=1.2,
         messages=[{"role": "user", "content": prompt}],
     )
 

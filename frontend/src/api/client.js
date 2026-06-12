@@ -15,3 +15,6 @@ export async function expandTopic(topic) {
   const params = new URLSearchParams({ topic });
   return apiGet(`/expand?${params}`);
 }
+export async function getRandomTopic() {
+  return apiGet("/random-topic");
+}

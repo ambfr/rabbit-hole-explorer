@@ -10,7 +10,7 @@ const SUGGESTIONS = [
 ];
 
 export default function Home() {
-  const { startExploring } = useApp();
+  const { startExploring, startRandomRabbitHole } = useApp();
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -47,6 +47,13 @@ export default function Home() {
             </button>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={startRandomRabbitHole}
+          className="mt-8 border border-amber-900/40 px-6 py-3 text-xs uppercase tracking-[0.3em] text-amber-100/70 transition hover:border-amber-500/60 hover:text-amber-200"
+        >
+          🎲 Random Rabbit Hole
+        </button>
       </main>
     </div>
   );

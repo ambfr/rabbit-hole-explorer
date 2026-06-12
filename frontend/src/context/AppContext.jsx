@@ -1,6 +1,6 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { expandTopic } from "../api/client";
+import { expandTopic, getRandomTopic } from "../api/client";
 import { mergeExpansion, toId } from "../utils/graph";
 
 const AppContext = createContext(null);
@@ -14,6 +14,13 @@ export function AppProvider({ children }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [autoMode, setAutoMode] = useState(false);
+  const [exploredCount, setExploredCount] = useState(0);
+  const [depth, setDepth] = useState(0);
+  const autoModeRef = useRef(autoMode);
+  useEffect(() => {
+    autoModeRef.current = autoMode;
+  }, [autoMode]);
 
   const expandNode = useCallback(async (query, { isRoot = false } = {}) => {
     const trimmed = query.trim();
@@ -74,6 +81,11 @@ export function AppProvider({ children }) {
 
   const selectAndExpand = useCallback(
     async (nodeId, label) => {
+      if (autoModeRef.current) {
+        setAutoMode(false);
+        setError("Switched to manual exploration");
+        setTimeout(() => setError(null), 2500);
+      }
       setSelectedNodeId(nodeId);
       setPanelOpen(true);
       setSelectedDetail({
@@ -106,6 +118,75 @@ export function AppProvider({ children }) {
     setSelectedDetail(null);
   }, []);
 
+  const stopAutoMode = useCallback(() => {
+    setAutoMode(false);
+  }, []);
+
+  const pauseAutoMode = useCallback(() => setAutoMode("paused"), []);
+  const resumeAutoMode = useCallback(() => setAutoMode("running"), []);
+
+  const startRandomRabbitHole = useCallback(async () => {
+    setGraph({ nodes: [], edges: [] });
+    setSelectedNodeId(null);
+    setSelectedDetail(null);
+    setPanelOpen(false);
+    setError(null);
+    setExploredCount(0);
+    setDepth(0);
+    navigate("/explore");
+
+    const { topic: randomTopicValue } = await getRandomTopic();
+
+    setPanelOpen(true);
+    setSelectedDetail({ label: randomTopicValue, summary: null, relatedTopics: [], loading: true });
+
+    const data = await expandNode(randomTopicValue, { isRoot: true });
+    if (data) {
+      setSelectedNodeId(toId(randomTopicValue));
+      setSelectedDetail({
+        label: randomTopicValue,
+        summary: data.summary,
+        relatedTopics: data.related_topics,
+        loading: false,
+      });
+      setExploredCount(1);
+      setDepth(1);
+      setAutoMode("running");
+    }
+  }, [expandNode, navigate]);
+
+  useEffect(() => {
+    if (autoMode !== "running") return;
+
+    const interval = setInterval(() => {
+      if (autoModeRef.current !== "running") return;
+
+      setGraph((currentGraph) => {
+        const expandedIds = new Set(currentGraph.edges.map((e) => e.source));
+        const candidates = currentGraph.nodes.filter((n) => !expandedIds.has(n.id));
+
+        if (candidates.length === 0) {
+          setAutoMode(false);
+          return currentGraph;
+        }
+
+        const pick = candidates[Math.floor(Math.random() * candidates.length)];
+
+        expandNode(pick.data.label).then((data) => {
+          if (data) {
+            setExploredCount((c) => c + 1);
+            setDepth((d) => d + 1);
+          }
+        });
+
+        return currentGraph;
+      });
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [autoMode, expandNode]);
+
+
   const resetExploration = useCallback(() => {
     setTopic("");
     setGraph({ nodes: [], edges: [] });
@@ -125,11 +206,14 @@ export function AppProvider({ children }) {
         panelOpen,
         loading,
         error,
+        autoMode,
+        exploredCount,
+        depth,
         startExploring,
-        expandNode,
-        selectAndExpand,
-        closePanel,
-        resetExploration,
+        startRandomRabbitHole,
+        stopAutoMode,
+        pauseAutoMode,
+        resumeAutoMode,
       }}
     >
       {children}
