@@ -1,8 +1,13 @@
 from fastapi import FastAPI, HTTPException
 
 from database import client
+from routes.auth import router as auth_router
+from routes.graph import router as graph_router
 
 app = FastAPI()
+
+app.include_router(auth_router)
+app.include_router(graph_router)
 
 
 @app.get("/")
