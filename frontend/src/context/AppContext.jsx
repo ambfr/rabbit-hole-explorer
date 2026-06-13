@@ -96,6 +96,28 @@ export function AppProvider({ children }) {
         loading: true,
       });
 
+      const alreadyExpanded = graph.edges.some((e) => e.source === nodeId);
+
+      if (alreadyExpanded) {
+        // Just fetch summary for display, don't modify the graph
+        try {
+          setLoading(true);
+          const data = await expandTopic(label);
+          setSelectedDetail({
+            label,
+            summary: data.summary,
+            relatedTopics: data.related_topics,
+            loading: false,
+          });
+        } catch (err) {
+          setError(err.message || "Failed to fetch topic info");
+          setSelectedDetail((prev) => (prev ? { ...prev, loading: false } : null));
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
       const data = await expandNode(label);
       if (data) {
         setSelectedDetail({
@@ -110,7 +132,7 @@ export function AppProvider({ children }) {
         );
       }
     },
-    [expandNode],
+    [expandNode, graph.edges],
   );
 
   const closePanel = useCallback(() => {
