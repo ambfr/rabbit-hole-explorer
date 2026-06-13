@@ -20,6 +20,7 @@ export default function Home() {
       <nav className="absolute top-0 right-0 z-10 flex items-center gap-4 p-6 text-xs uppercase tracking-[0.3em]">
         {isAuthenticated ? (
           <>
+            <Link to="/saved" className="text-zinc-500 hover:text-amber-200">My Maps</Link>
             <span className="text-zinc-500">{user}</span>
             <button onClick={logout} className="text-amber-100/70 hover:text-amber-200">
               Logout

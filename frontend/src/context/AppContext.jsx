@@ -156,6 +156,19 @@ export function AppProvider({ children }) {
     }
   }, [expandNode, navigate]);
 
+  const loadSavedGraph = useCallback(
+    (savedGraph) => {
+      setGraph({ nodes: savedGraph.nodes, edges: savedGraph.edges });
+      setSelectedNodeId(null);
+      setSelectedDetail(null);
+      setPanelOpen(false);
+      setError(null);
+      setTopic(savedGraph.title);
+      navigate("/explore");
+    },
+    [navigate],
+  );
+
   useEffect(() => {
     if (autoMode !== "running") return;
 
@@ -219,6 +232,7 @@ export function AppProvider({ children }) {
       selectAndExpand,
       closePanel,
       resetExploration,
+      loadSavedGraph,
     }}
   >
       {children}
