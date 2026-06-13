@@ -71,3 +71,15 @@ export async function getGraphs(token) {
   }
   return response.json();
 }
+
+export async function deleteGraph(graphId, token) {
+  const response = await fetch(`${API_BASE_URL}/graphs/${graphId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || "Failed to delete graph");
+  }
+  return response.json();
+}

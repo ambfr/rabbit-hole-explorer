@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getGraphs } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { useApp } from "../context/AppContext";
+import { deleteGraph } from "../api/client";
 
 export default function SavedMaps() {
   const { token, isAuthenticated } = useAuth();
@@ -10,6 +11,15 @@ export default function SavedMaps() {
   const [graphs, setGraphs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const handleDelete = async (e, graphId) => {
+    e.stopPropagation();
+    try {
+      await deleteGraph(graphId, token);
+      setGraphs((prev) => prev.filter((g) => g.id !== graphId));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -51,14 +61,22 @@ export default function SavedMaps() {
 
         <div className="flex flex-col gap-3">
           {graphs.map((g) => (
-            <button
-              key={g.id}
-              onClick={() => loadSavedGraph(g)}
-              className="border border-zinc-800 px-5 py-4 text-left transition hover:border-amber-500/50"
-            >
+            <div
+            key={g.id}
+            onClick={() => loadSavedGraph(g)}
+            className="flex cursor-pointer items-center justify-between border border-zinc-800 px-5 py-4 text-left transition hover:border-amber-500/50"
+          >
+            <div>
               <p className="text-lg text-zinc-100">{g.title}</p>
               <p className="text-xs text-zinc-500">{g.nodes.length} topics</p>
+            </div>
+            <button
+              onClick={(e) => handleDelete(e, g.id)}
+              className="text-xs uppercase tracking-[0.2em] text-zinc-500 hover:text-red-400"
+            >
+              Delete
             </button>
+          </div>
           ))}
         </div>
       </div>
