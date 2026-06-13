@@ -1,5 +1,7 @@
 import SearchBar from "../components/SearchBar";
 import { useApp } from "../context/AppContext";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const SUGGESTIONS = [
   "Renaissance art",
@@ -11,9 +13,25 @@ const SUGGESTIONS = [
 
 export default function Home() {
   const { startExploring, startRandomRabbitHole } = useApp();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      <nav className="absolute top-0 right-0 z-10 flex items-center gap-4 p-6 text-xs uppercase tracking-[0.3em]">
+        {isAuthenticated ? (
+          <>
+            <span className="text-zinc-500">{user}</span>
+            <button onClick={logout} className="text-amber-100/70 hover:text-amber-200">
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="text-zinc-500 hover:text-amber-200">Login</Link>
+            <Link to="/signup" className="text-amber-100/70 hover:text-amber-200">Sign up</Link>
+          </>
+        )}
+      </nav>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(120,113,108,0.12)_0%,_transparent_55%)]" />
 
       <main className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center px-6 py-20 sm:py-28">
