@@ -2,6 +2,10 @@
 
 A web app that lets you explore topics by following an interactive visual map of related ideas — like falling down a Wikipedia rabbit hole, but with AI guiding the way.
 
+🔗 **Live demo:** https://rabbit-hole-explorer-orcin.vercel.app
+
+> ⚠️ Note: the backend is hosted on Render's free tier, which spins down after inactivity. The first search after idle time may take 30-50 seconds while the server wakes up — subsequent requests are fast.
+
 ## What does it do?
 
 You type in any topic (say, "Ancient Rome"), and the app shows it as a node on a graph. Click that node, and it expands to show 5 related topics connected to it. Keep clicking, and you build out a sprawling visual map of how ideas connect — with AI-generated summaries for each topic along the way.
