@@ -4,10 +4,27 @@ import GraphView from "../components/GraphView";
 import SearchBar from "../components/SearchBar";
 import SidePanel from "../components/SidePanel";
 import { useApp } from "../context/AppContext";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { saveGraph } from "../api/client";
 
 export default function Explore() {
-  const { graph, loading, error, autoMode, exploredCount, depth, pauseAutoMode, resumeAutoMode, stopAutoMode } = useApp();
-  
+  const { graph, loading, error, autoMode, exploredCount, depth, pauseAutoMode, resumeAutoMode, stopAutoMode, topic } = useApp();
+  const { isAuthenticated, token } = useAuth();
+  const [saveStatus, setSaveStatus] = useState(null); // null | "saving" | "saved" | "error"
+
+  const handleSave = async () => {
+    if (graph.nodes.length === 0) return;
+    setSaveStatus("saving");
+    try {
+      await saveGraph(topic || "Untitled Exploration", graph.nodes, graph.edges, token);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus(null), 2000);
+    } catch (err) {
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus(null), 2000);
+    }
+  };
   return (
     <div className="flex h-screen flex-col bg-zinc-950">
       <header className="z-20 flex shrink-0 items-center gap-4 border-b border-zinc-800/80 bg-zinc-950/90 px-4 py-4 backdrop-blur-sm sm:px-6">
@@ -20,6 +37,15 @@ export default function Explore() {
         <div className="min-w-0 flex-1">
           <SearchBar compact />
         </div>
+        {isAuthenticated && (
+          <button
+            onClick={handleSave}
+            disabled={graph.nodes.length === 0 || saveStatus === "saving"}
+            className="shrink-0 border border-zinc-800 px-4 py-2 text-xs uppercase tracking-[0.3em] text-zinc-400 transition hover:border-amber-500/50 hover:text-amber-200 disabled:opacity-40"
+          >
+            {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved ✓" : saveStatus === "error" ? "Failed" : "Save"}
+          </button>
+        )}
       </header>
 
       <div className="relative min-h-0 flex-1">

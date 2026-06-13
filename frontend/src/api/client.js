@@ -44,3 +44,30 @@ export async function login(email, password) {
   }
   return response.json();
 }
+
+export async function saveGraph(title, nodes, edges, token) {
+  const response = await fetch(`${API_BASE_URL}/graphs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, nodes, edges }),
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || "Failed to save graph");
+  }
+  return response.json();
+}
+
+export async function getGraphs(token) {
+  const response = await fetch(`${API_BASE_URL}/graphs`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || "Failed to fetch graphs");
+  }
+  return response.json();
+}

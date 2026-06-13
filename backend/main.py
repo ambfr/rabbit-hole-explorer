@@ -5,6 +5,9 @@ from database import client
 from routes.auth import router as auth_router
 from routes.graph import router as graph_router
 
+from routes import graphs
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -17,7 +20,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(graph_router)
-
+app.include_router(graphs.router)
 
 @app.get("/")
 def read_root():
