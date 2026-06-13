@@ -88,3 +88,26 @@ This will give you a local link (usually `http://localhost:5173`) — open that 
 ## About This Project
 
 This was built as a learning project to practice full-stack development — combining a React frontend, a Python/FastAPI backend, a MongoDB database, user authentication, and AI integration into one cohesive app.
+
+## Screenshots
+
+**Home**
+![Home](./screenshots/home.png)
+
+**Logged In — Home**
+![Logged in home](./screenshots/logged-in-home.png)
+
+**Explore — Knowledge Graph**
+![Explore](./screenshots/explore.png)
+
+**Random Rabbit Hole Mode**
+![Random Rabbit Hole](./screenshots/random-rabbit-hole.png)
+
+**Login**
+![Login](./screenshots/login.png)
+
+**Signup**
+![Signup](./screenshots/signup.png)
+
+**Saved Maps**
+![Saved Maps](./screenshots/saved-maps.png)
