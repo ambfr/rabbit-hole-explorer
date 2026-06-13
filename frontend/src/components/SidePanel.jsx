@@ -36,9 +36,12 @@ export default function SidePanel() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium text-zinc-50">
-            {selectedDetail.label}
-          </h2>
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium text-zinc-50">
+              {selectedDetail.label}
+            </h2>
+            <TopicLinksPopover topic={selectedDetail.label} />
+          </div>
 
           {selectedDetail.loading || loading ? (
             <p className="mt-6 text-sm uppercase tracking-[0.25em] text-zinc-500">
