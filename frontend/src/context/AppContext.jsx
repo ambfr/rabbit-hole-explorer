@@ -78,7 +78,7 @@ export function AppProvider({ children }) {
     },
     [expandNode, navigate],
   );
-  console.log("selectAndExpand called, autoModeRef:", autoModeRef.current);
+  
 
   const selectAndExpand = useCallback(
     async (nodeId, label) => {
