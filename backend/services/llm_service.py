@@ -35,7 +35,7 @@ async def expand_topic(topic: str) -> dict:
 The related_topics list must contain exactly 5 related topic names."""
 
     response = await client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -70,7 +70,7 @@ async def get_random_topic() -> str:
     prompt = f"""Give me one single specific, interesting topic related to {category} - something that would be genuinely surprising or lesser-known. Respond with ONLY the topic name, nothing else, no quotes, no explanation."""
 
     response = await client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         max_tokens=50,
         temperature=1.2,
         messages=[{"role": "user", "content": prompt}],
