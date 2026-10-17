@@ -1,0 +1,11 @@
+name: keep-alive
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS --retry 5 --retry-delay 20 -m 120 https://rabbit-hole-explorer-8k78.onrender.com/health

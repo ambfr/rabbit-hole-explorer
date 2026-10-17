@@ -38,3 +38,8 @@ async def ping():
         return {"db": "connected"}
     except Exception:
         raise HTTPException(status_code=503, detail="Database connection failed")
+
+@app.get("/health")
+async def health():
+    await client.admin.command("ping")
+    return {"status": "ok"}
